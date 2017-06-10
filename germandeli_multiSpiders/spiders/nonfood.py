@@ -20,25 +20,43 @@ class NonfoodSpider(scrapy.Spider):
         for url in urls:
             yield scrapy.Request("http://germandeli.com"+url, self.parse_page_sub)
 
-
-    def parse_page_sub(self, response):#using spash for scraping each sub-category
+    def parse_page_sub(self, response):  # using spash for scraping each sub-category
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://germandeli.com"+url, self.parse_products,
-                                 meta={'splash':{
-                                     'endpoint': 'render.html',
-                                     'args':{'wait': 0.5}},
-                                 'url':url.extract()
-                                 })
-        #also need to add splash in this
-        next = response.xpath('*//ul[@class="pagination-links"]/li[3]/a/@href').extract()#need to test the li[3] with scrapy shell again
-        yield scrapy.Request("http://germandeli.com"+next, self.parse_page_sub,
-                             meta={'splash':{
-                                 'endpoint': 'render.html',
-                                 'args':{'wait': 0.5}},
-                             'url':next.extract()
-                             })
+            yield SplashRequest("http://germandeli.com" + url, self.parse_products,
+                                args={
+                                    # optional; parameters passed to Splash HTTP API
+                                    'wait': 0.5,
+                                    # 'timeout': 10,
 
+                                    # 'url' is prefilled from request url
+                                    # 'http_method' is set to 'POST' for POST requests
+                                    # 'body' is set to request body for POST requests
+                                },
+                                endpoint='render.html',  # optional; default is render.html
+                                # splash_url='<url>',  # optional; overrides SPLASH_URL
+                                # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
+                                )
+            print(url)
+
+        # also need to add splash in this
+        next = response.xpath(
+            '*//ul[@class="pagination-links"]/li[3]/a/@href').extract()  # need to test the li[3] with scrapy shell again
+        yield SplashRequest("http://germandeli.com" + next, self.parse_page_sub,
+                            args={
+                                # optional; parameters passed to Splash HTTP API
+                                'wait': 0.5,
+                                # 'timeout': 10,
+
+                                # 'url' is prefilled from request url
+                                # 'http_method' is set to 'POST' for POST requests
+                                # 'body' is set to request body for POST requests
+                            },
+                            endpoint='render.html',  # optional; default is render.html
+                            # splash_url='<url>',  # optional; overrides SPLASH_URL
+                            # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
+                            )
+        print(next)
 
     def parse_product(self, response):#need to use the spash for scraping the ingredients
         #grab the url of the product image
@@ -57,7 +75,7 @@ class NonfoodSpider(scrapy.Spider):
         ingredients = response.xpath('//*[@id="ingredients"]/text()').extract()
 
         #yield the result and check about the splash for ingredients
-        yield ProductsSpider(name = name, price = price, description = description, ingredients = ingredients, image_url =[image_url])
+        yield NonfoodSpider(name = name, price = price, description = description, ingredients = ingredients, image_url =[image_url])
 
 
 

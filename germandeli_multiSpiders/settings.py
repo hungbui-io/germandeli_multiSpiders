@@ -67,7 +67,9 @@ ROBOTSTXT_OBEY = True
 #ITEM_PIPELINES = {
 #    'germandeli_multiSpiders.pipelines.GermandeliMultispidersPipeline': 300,
 #}
-
+ITEM_PIPELINES = {
+   'scrapy.contrib.pipeline.images.FilesPipeline': 1,
+}
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -99,3 +101,4 @@ SPIDER_MIDDLEWARES = {
 }
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+FILES_STORE = "/home/hung/Projects/germandeli_multiSpiders/output"
