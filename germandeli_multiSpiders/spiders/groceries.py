@@ -5,8 +5,8 @@ from scrapy.selector import Selector
 from scrapy_splash import SplashRequest
 
 
-class ProductsSpider(scrapy.Spider):
-    name = "products"
+class GroceriesSpider(scrapy.Spider):
+    name = "groceries"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://germandeli.com']
 
