@@ -18,13 +18,13 @@ class ProductsSpider(scrapy.Spider):
     def parse_page(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://germandeli.com"+url, self.parse_page_sub)
+            yield scrapy.Request("http://germandeli.com/"+url, self.parse_page_sub)
 
 
     def parse_page_sub(self, response):#using spash for scraping each sub-category
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://germandeli.com"+url, self.parse_products,
+            yield scrapy.Request("http://germandeli.com"+url, self.parse_product,
                                  meta={'splash':{
                                      'endpoint': 'render.html',
                                      'args':{'wait': 0.5}},
