@@ -33,22 +33,21 @@ class BeveragesSpider(scrapy.Spider):
 
     def parse_product(self, response):
         #grab the url of the product image
-        item = GermandeliMultispidersItem()
-        # image = response.css("").xpath("@src")
-        # image_url = image.extract_first()
 
         #grab the name, price, description and ingredients
-        item['name'] = response.xpath('//*[@itemprop="name"]/text()').extract_first()
-        item['price'] = response.xpath('//*[@itemprop="price"]/text()').extract_first()
-        item['ingredients'] = response.xpath('//*[@id="ingredients"]/text()').extract()
-        item['description'] = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
-        print(item['name'] )
-        print(item['price'])
-        print(item['ingredients'])
+        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
+        price_ = response.xpath('//*[@itemprop="price"]/text()').extract_first()
+        ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
+        description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
+
+        image_ = response.xpath('//*[@itemprop="image"]/@src')
+        image_url_ = response.xpath('//*[@itemprop="image"]/@src').extract_first()
+
 
 
         #yield the result and check about the splash for ingredients
-        return item
+        #yield scrapy.Request(item['image_url'])
+        yield GermandeliMultispidersItem(name=name_, price=price_,ingredients=ingredients_,description=description_,image_url=[image_url_]) #or yield item or return item
 
 
 
