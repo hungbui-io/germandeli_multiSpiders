@@ -15,3 +15,4 @@ class GermandeliMultispidersItem(scrapy.Item):
     ingredients = scrapy.Field()
     image = scrapy.Field()
     image_url = scrapy.Field()
+    index = scrapy.Field()
