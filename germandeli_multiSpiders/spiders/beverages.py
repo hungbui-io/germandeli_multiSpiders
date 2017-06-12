@@ -19,17 +19,19 @@ class BeveragesSpider(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://www.germandeli.com"+url, self.parse_page_sub)
+            yield scrapy.Request("http://www.germandeli.com/"+url, self.parse_page)
             print(url)
 
-    def parse_page_sub(self, response):#using spash for scraping each sub-category
+    def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:##problem with the for loop
-            yield scrapy.Request("http://www.germandeli.com"+url, self.parse_product)
             print(url)
+            yield scrapy.Request("http://www.germandeli.com"+url, self.parse_product)
 
 
-    def parse_product(self, response):#need to use the spash for scraping the ingredients
+
+
+    def parse_product(self, response):
         #grab the url of the product image
         item = GermandeliMultispidersItem()
         # image = response.css("").xpath("@src")

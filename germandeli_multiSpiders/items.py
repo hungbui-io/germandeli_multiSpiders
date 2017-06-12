@@ -12,6 +12,6 @@ class GermandeliMultispidersItem(scrapy.Item):
     name = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
-    ingridients = scrapy.Field()
+    ingredients = scrapy.Field()
     image = scrapy.Field()
     image_url = scrapy.Field()
