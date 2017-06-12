@@ -41,16 +41,11 @@ class BeveragesSpider(scrapy.Spider):
         item['name'] = response.xpath('//*[@itemprop="name"]/text()').extract_first()
         item['price'] = response.xpath('//*[@itemprop="price"]/text()').extract_first()
         item['ingredients'] = response.xpath('//*[@id="ingredients"]/text()').extract()
+        item['description'] = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
         print(item['name'] )
         print(item['price'])
         print(item['ingredients'])
 
-        # description = list()
-        # description[0] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[1]/text()').extract()
-        # description[1] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[2]/text()').extract()
-        # description[2] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[3]/text()').extract()
-        # description[3] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[4]/text()').extract()
-        # description[4] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[5]/text()').extract()
 
         #yield the result and check about the splash for ingredients
         return item
