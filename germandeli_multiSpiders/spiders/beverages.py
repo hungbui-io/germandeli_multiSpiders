@@ -47,7 +47,7 @@ class BeveragesSpider(scrapy.Spider):
 
         #yield the result and check about the splash for ingredients
         #yield scrapy.Request(item['image_url'])
-        yield GermandeliMultispidersItem(name=name_, price=price_,ingredients=ingredients_,description=description_,image_url=[image_url_]) #or yield item or return item
+        yield GermandeliMultispidersItem(name=name_, price=price_,ingredients=ingredients_,description=description_, file_urls=[image_url_]) #or yield item or return item
 
 
 
