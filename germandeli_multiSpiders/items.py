@@ -16,4 +16,3 @@ class GermandeliMultispidersItem(scrapy.Item):
     files = scrapy.Field()
     file_urls = scrapy.Field()
     update_on = scrapy.Field()
-    #index = scrapy.Field()

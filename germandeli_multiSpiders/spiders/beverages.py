@@ -30,7 +30,7 @@ class BeveragesSpider(scrapy.Spider):
 
 
     def parse_product(self, response):
-        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()#using strip('char') in python to remove the \n and \t characters
+        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
         price_ = response.xpath('//*[@itemprop="price"]/text()').extract_first()
         ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
         description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
@@ -40,7 +40,8 @@ class BeveragesSpider(scrapy.Spider):
 
         update_on_ = date.today().isoformat()
 
-        yield GermandeliMultispidersItem(name=name_, price=price_,ingredients=ingredients_,description=description_,update_on=update_on_, file_urls=[image_url_])
+        yield GermandeliMultispidersItem(name=name_, price=price_, ingredients=ingredients_, description=description_,
+                                         update_on=update_on_, file_urls=[image_url_])
 
 
 
