@@ -14,26 +14,28 @@ class MeatsSpider(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://www.germandeli.com/"+url, self.parse_page)
-            print(url)
+            if url is not None:
+                yield scrapy.Request("http://www.germandeli.com/"+url, self.parse_page)
+                print(url)
 
     def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:
-            yield SplashRequest("http://www.germandeli.com" + url, self.parse_product,
-                                args={
-                                    # optional; parameters passed to Splash HTTP API
-                                    'wait': 0.5,
-                                    'timeout': 10,
+            if url is not None:
+                yield SplashRequest("http://www.germandeli.com" + url, self.parse_product,
+                                    args={
+                                        # optional; parameters passed to Splash HTTP API
+                                        'wait': 0.5,
+                                        'timeout': 10,
 
-                                    # 'url' is prefilled from request url
-                                    # 'http_method' is set to 'POST' for POST requests
-                                    # 'body' is set to request body for POST requests
-                                },
-                                endpoint='render.html',  # optional; default is render.html
-                                # splash_url='<url>',  # optional; overrides SPLASH_URL
-                                # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
-                                )
+                                        # 'url' is prefilled from request url
+                                        # 'http_method' is set to 'POST' for POST requests
+                                        # 'body' is set to request body for POST requests
+                                    },
+                                    endpoint='render.html',  # optional; default is render.html
+                                    # splash_url='<url>',  # optional; overrides SPLASH_URL
+                                    # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
+                                    )
             print(url)
 
         next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href').extract_first()
