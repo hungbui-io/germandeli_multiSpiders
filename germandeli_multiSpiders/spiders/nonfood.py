@@ -9,6 +9,7 @@ class NonfoodSpider(scrapy.Spider):
     name = "nonfood"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://germandeli.com']
+    custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood'}
 
     def parse(self, response):
         category_links = response.xpath('*//ul[@class="nav"]/li/a/@href').extract()

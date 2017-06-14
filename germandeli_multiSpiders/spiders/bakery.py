@@ -9,7 +9,7 @@ class BakerySpider(scrapy.Spider):
     name = "bakery"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://germandeli.com']
-
+    custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/bakery'}
     def parse(self, response):
         category_links = response.xpath('*//ul[@class="nav"]/li/a/@href').extract()
         for link in category_links:

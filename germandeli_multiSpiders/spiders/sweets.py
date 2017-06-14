@@ -8,22 +8,22 @@ from scrapy_splash import SplashRequest
 class SweetsSpider(scrapy.Spider):
     name = "sweets"
     allowed_domains = ["germandeli.com"]
-    start_urls = ['http://germandeli.com']
+    start_urls = ['http://www.germandeli.com']
 
     def parse(self, response):
         category_links = response.xpath('*//ul[@class="nav"]/li/a/@href').extract()
         for link in category_links:
-            yield scrapy.Request("http://germandeli.com"+link, self.parse_page)
+            yield scrapy.Request("http://www.germandeli.com"+link, self.parse_page)
 
     def parse_page(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://germandeli.com/"+url, self.parse_page_sub)
+            yield scrapy.Request("http://www.germandeli.com/"+url, self.parse_page_sub)
 
     def parse_page_sub(self, response):  # using spash for scraping each sub-category
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:
-            yield SplashRequest("http://germandeli.com" + url, self.parse_product,
+            yield SplashRequest("http://www.germandeli.com" + url, self.parse_product,
                                 args={
                                     # optional; parameters passed to Splash HTTP API
                                     'wait': 0.5,
@@ -40,9 +40,8 @@ class SweetsSpider(scrapy.Spider):
             print(url)
 
         # also need to add splash in this
-        next = response.xpath(
-            '*//ul[@class="pagination-links"]/li[3]/a/@href').extract()  # need to test the li[3] with scrapy shell again
-        yield SplashRequest("http://germandeli.com" + next, self.parse_page_sub,
+        next = response.xpath('*//ul[@class="pagination-links"]/li[3]/a/@href').extract()  # need to test the li[3] with scrapy shell again
+        yield SplashRequest("http://www.www.germandeli.com" + next, self.parse_page_sub,
                             args={
                                 # optional; parameters passed to Splash HTTP API
                                 'wait': 0.5,
