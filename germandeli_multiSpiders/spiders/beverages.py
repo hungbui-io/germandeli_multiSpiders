@@ -9,6 +9,7 @@ class BeveragesSpider(scrapy.Spider):
     name = "beverages"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/Beverages']
+    custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/beverages'}
 
     def parse(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()

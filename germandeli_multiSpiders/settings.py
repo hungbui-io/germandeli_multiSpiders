@@ -102,4 +102,4 @@ SPIDER_MIDDLEWARES = {
 }
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
-FILES_STORE = "/home/hung/Projects/germandeli_multiSpiders/output"
+#FILES_STORE = "/home/hung/Projects/germandeli_multiSpiders/output"
