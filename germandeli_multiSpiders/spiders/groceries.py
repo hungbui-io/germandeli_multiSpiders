@@ -8,75 +8,76 @@ from scrapy_splash import SplashRequest
 class GroceriesSpider(scrapy.Spider):
     name = "groceries"
     allowed_domains = ["germandeli.com"]
-    start_urls = ['http://germandeli.com']
+    start_urls = ['http://germandeli.com/Groceries']
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/groceries'}
 
     def parse(self, response):
-        category_links = response.xpath('*//ul[@class="nav"]/li/a/@href').extract()
-        for link in category_links:
-            yield scrapy.Request("http://germandeli.com"+link, self.parse_page)
-
-    def parse_page(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
         for url in urls:
-            yield scrapy.Request("http://germandeli.com/"+url, self.parse_page_sub)
+            if url is not None:
+                yield scrapy.Request("http://www.germandeli.com/"+url, self.parse_page)
+                print(url)
 
-    def parse_page_sub(self, response):  # using spash for scraping each sub-category
+    def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
         for url in urls:
-            yield SplashRequest("http://germandeli.com" + url, self.parse_product,
-                                args={
-                                    # optional; parameters passed to Splash HTTP API
-                                    'wait': 0.5,
-                                    # 'timeout': 10,
+            if url is not None:
+                yield SplashRequest("http://www.germandeli.com" + url, self.parse_product,
+                                    args={
+                                        # optional; parameters passed to Splash HTTP API
+                                        'wait': 0.5,
+                                        'timeout': 10,
 
-                                    # 'url' is prefilled from request url
-                                    # 'http_method' is set to 'POST' for POST requests
-                                    # 'body' is set to request body for POST requests
-                                },
-                                endpoint='render.html',  # optional; default is render.html
-                                # splash_url='<url>',  # optional; overrides SPLASH_URL
-                                # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
-                                )
+                                        # 'url' is prefilled from request url
+                                        # 'http_method' is set to 'POST' for POST requests
+                                        # 'body' is set to request body for POST requests
+                                    },
+                                    endpoint='render.html',  # optional; default is render.html
+                                    # splash_url='<url>',  # optional; overrides SPLASH_URL
+                                    # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
+                                    )
             print(url)
 
-        # also need to add splash in this
-        next = response.xpath(
-            '*//ul[@class="pagination-links"]/li[3]/a/@href').extract()  # need to test the li[3] with scrapy shell again
-        yield SplashRequest("http://germandeli.com" + next, self.parse_page_sub,
-                            args={
-                                # optional; parameters passed to Splash HTTP API
-                                'wait': 0.5,
-                                # 'timeout': 10,
+        next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href').extract_first()
+        if next is not None:
+            yield scrapy.Request("http://www.germandeli.com" + next, self.parse_page, meta={
+            'splash': {
+            'args': {
+            # set rendering arguments here
+                'html': 1,
+                'png': 1,
+                'wait': 0.5,
+                'timeout': 10,
+            # 'url' is prefilled from request url
+            # 'http_method' is set to 'POST' for POST requests
+            # 'body' is set to request body for POST requests
+                     },
 
-                                # 'url' is prefilled from request url
-                                # 'http_method' is set to 'POST' for POST requests
-                                # 'body' is set to request body for POST requests
-                            },
-                            endpoint='render.html',  # optional; default is render.html
-                            # splash_url='<url>',  # optional; overrides SPLASH_URL
-                            # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
-                            )
+            # optional parameters
+            'endpoint': 'render.html',  # optional; default is render.json
+            'splash_url': '<url>',  # optional; overrides SPLASH_URL
+            'slot_policy': scrapy_splash.SlotPolicy.PER_DOMAIN,
+            # 'splash_headers': {},  # optional; a dict with headers sent to Splash
+            # 'dont_process_response': True,  # optional, default is False
+            # 'dont_send_headers': True,  # optional, default is False
+            # 'magic_response': False,  # optional, default is True
+               }
+             })
+            #
+
         print(next)
 
-    def parse_product(self, response):#need to use the spash for scraping the ingredients
-        #grab the url of the product image
-        image = response.css("").xpath("@src")
-        image_url = image.extract_first()
 
-        #grab the name, price, description and ingredients
-        name = response.xpath('//*[@itemprop="name"]/text()').extract_first()
-        price = response.xpath('//*[@itemprop="price"]/text()').extract_first()
-        description = list()
-        description[0] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[1]/text()').extract()
-        description[1] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[2]/text()').extract()
-        description[2] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[3]/text()').extract()
-        description[3] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[4]/text()').extract()
-        description[4] = response.xpath('*//div[@class="tab-pane active in"]/ul/li[5]/text()').extract()
-        ingredients = response.xpath('//*[@id="ingredients"]/text()').extract()
+    def parse_product(self, response):
+        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
+        price_ = response.xpath('//*[@itemprop="price"]/text()').extract_first()
+        ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
+        description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
 
-        #yield the result and check about the splash for ingredients
-        yield GroceriesSpider(name = name, price = price, description = description, ingredients = ingredients, image_url =[image_url])
+        image_ = response.xpath('//*[@itemprop="image"]/@src')
+        image_url_ = response.xpath('//*[@itemprop="image"]/@src').extract_first()
+
+        yield GermandeliMultispidersItem(name=name_, price=price_,ingredients=ingredients_,description=description_, file_urls=[image_url_])
 
 
 
