@@ -39,30 +39,31 @@ class MeatsSpider(scrapy.Spider):
             print(url)
 
         next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href').extract_first()
-        yield scrapy.Request("http://www.germandeli.com" + next, self.parse_page, meta={
-         'splash': {
-         'args': {
-        # set rendering arguments here
-            'html': 1,
-            'png': 1,
-            'wait': 0.5,
-            'timeout': 10,
-        # 'url' is prefilled from request url
-        # 'http_method' is set to 'POST' for POST requests
-        # 'body' is set to request body for POST requests
-                  },
+        if next is not None:
+            yield scrapy.Request("http://www.germandeli.com" + next, self.parse_page, meta={
+            'splash': {
+            'args': {
+            # set rendering arguments here
+                'html': 1,
+                'png': 1,
+                'wait': 0.5,
+                'timeout': 10,
+            # 'url' is prefilled from request url
+            # 'http_method' is set to 'POST' for POST requests
+            # 'body' is set to request body for POST requests
+                     },
 
-        # optional parameters
-        'endpoint': 'render.html',  # optional; default is render.json
-        'splash_url': '<url>',  # optional; overrides SPLASH_URL
-        'slot_policy': scrapy_splash.SlotPolicy.PER_DOMAIN,
-        # 'splash_headers': {},  # optional; a dict with headers sent to Splash
-        # 'dont_process_response': True,  # optional, default is False
-        # 'dont_send_headers': True,  # optional, default is False
-        # 'magic_response': False,  # optional, default is True
-           }
-         })
-        #
+            # optional parameters
+            'endpoint': 'render.html',  # optional; default is render.json
+            'splash_url': '<url>',  # optional; overrides SPLASH_URL
+            'slot_policy': scrapy_splash.SlotPolicy.PER_DOMAIN,
+            # 'splash_headers': {},  # optional; a dict with headers sent to Splash
+            # 'dont_process_response': True,  # optional, default is False
+            # 'dont_send_headers': True,  # optional, default is False
+            # 'magic_response': False,  # optional, default is True
+               }
+             })
+            #
 
         print(next)
 
