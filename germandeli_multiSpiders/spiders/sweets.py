@@ -14,9 +14,8 @@ class SweetsSpider(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('*//div[@class="category-cell-name"]/a/@href')
         for url in urls:
-            if url is not None:
-                yield scrapy.Request("http://www.germandeli.com/"+str(url.extract()), self.parse_page)
-                print(url)
+            yield scrapy.Request("http://www.germandeli.com/"+str(url.extract()), self.parse_page)
+            print(url)
 
     def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href')
@@ -25,7 +24,7 @@ class SweetsSpider(scrapy.Spider):
                                 args={
                                     # optional; parameters passed to Splash HTTP API
                                     'wait': 0.5,
-                                 #   'timeout': 10,
+                                    'timeout': 10,
 
                                     # 'url' is prefilled from request url
                                     # 'http_method' is set to 'POST' for POST requests
@@ -35,14 +34,14 @@ class SweetsSpider(scrapy.Spider):
                                 # splash_url='<url>',  # optional; overrides SPLASH_URL
                                 # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
                                 )
-            print(url)
+            #print(url)
 
         next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href')
         yield SplashRequest("http://www.germandeli.com" + str(next.extract_first()), self.parse_page,
                             args={
                                     # optional; parameters passed to Splash HTTP API
                                     'wait': 0.5,
-                                    #'timeout': 10,
+                                    'timeout': 10,
 
                                     # 'url' is prefilled from request url
                                     # 'http_method' is set to 'POST' for POST requests
@@ -53,7 +52,7 @@ class SweetsSpider(scrapy.Spider):
                                 # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
                                 )
 
-        print(next)
+        #print(next)
 
 
     def parse_product(self, response):
@@ -65,12 +64,8 @@ class SweetsSpider(scrapy.Spider):
         update_on_ = date.today().isoformat()
         price_ = response.xpath('//*[@itemprop="price"]/text()').extract()
         if(1 <= len(price_)):
-            price_1 = str(price_[1])
+            price_temp = str(price_[1])
             if(1 <= len(ingredients_)):
-                ingredients_1 = ingredients_[1]
-                yield GermandeliMultispidersItem(name=name_, price=price_1, ingredients=ingredients_1, description=description_,
+                ingredients_temp = ingredients_[1]
+                yield GermandeliMultispidersItem(name=name_, price=price_temp, ingredients=ingredients_temp, description=description_,
                                          update_on=update_on_, file_urls=[image_url_])
-
-
-
-
