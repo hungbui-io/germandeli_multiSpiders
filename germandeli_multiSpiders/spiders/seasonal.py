@@ -9,7 +9,13 @@ from datetime import date
 class SeasonalSpider(scrapy.Spider):
     name = "seasonal"
     allowed_domains = ["germandeli.com"]
-    start_urls = ['http://www.germandeli.com/Seasonal']
+    start_urls = ['http://www.germandeli.com/Seasonal',
+                  'http://www.germandeli.com/Seasonal/Christmas',
+                  'http://www.germandeli.com/Seasonal/Easter_Specialties',
+                  'http://www.germandeli.com/Seasonal/Greeting_Cards',
+                  'http://www.germandeli.com/Seasonal/Oktoberfest',
+                  'http://www.germandeli.com/Seasonal/Silvester_New_Years_Eve',
+                  'http://www.germandeli.com/Seasonal/Valentines_Day',]
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/seasonal'}
 
     def parse(self, response):
@@ -19,10 +25,16 @@ class SeasonalSpider(scrapy.Spider):
                 yield scrapy.Request("http://www.germandeli.com/"+str(url), self.parse_page)
                 print(url)
 
-    def parse_page(self, response):
-        urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()
+    def parse(self, response):
+        urls = response.xpath('*//div[@class="category-cell-name"]/a/@href')
         for url in urls:
-            yield SplashRequest("http://www.germandeli.com" + str(url), self.parse_product,
+            yield scrapy.Request("http://www.germandeli.com/"+str(url.extract()), self.parse_page)
+            print(url)
+
+    def parse_page(self, response):
+        urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href')
+        for url in urls:
+            yield SplashRequest("http://www.germandeli.com" + str(url.extract()), self.parse_product,
                                 args={
                                     # optional; parameters passed to Splash HTTP API
                                     'wait': 0.5,
@@ -36,51 +48,41 @@ class SeasonalSpider(scrapy.Spider):
                                 # splash_url='<url>',  # optional; overrides SPLASH_URL
                                 # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
                                 )
-            print(url)
+            #print(url)
 
-        next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href').extract_first()
-        yield scrapy.Request("http://www.germandeli.com" + str(next), self.parse_page, meta={
-        'splash': {
-        'args': {
-        # set rendering arguments here
-            'html': 1,
-            'png': 1,
-            'wait': 0.5,
-            'timeout': 10,
-        # 'url' is prefilled from request url
-        # 'http_method' is set to 'POST' for POST requests
-        # 'body' is set to request body for POST requests
-                    },
+        next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href')
+        yield SplashRequest("http://www.germandeli.com" + str(next.extract_first()), self.parse_page,
+                            args={
+                                    # optional; parameters passed to Splash HTTP API
+                                    'wait': 0.5,
+                                    'timeout': 10,
 
-        # optional parameters
-        'endpoint': 'render.html',  # optional; default is render.json
-        'splash_url': '<url>',  # optional; overrides SPLASH_URL
-        'slot_policy': scrapy_splash.SlotPolicy.PER_DOMAIN,
-        # 'splash_headers': {},  # optional; a dict with headers sent to Splash
-        # 'dont_process_response': True,  # optional, default is False
-        # 'dont_send_headers': True,  # optional, default is False
-        # 'magic_response': False,  # optional, default is True
-            }
-            })
-        #
+                                    # 'url' is prefilled from request url
+                                    # 'http_method' is set to 'POST' for POST requests
+                                    # 'body' is set to request body for POST requests
+                                },
+                                endpoint='render.html',  # optional; default is render.html
+                                # splash_url='<url>',  # optional; overrides SPLASH_URL
+                                # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
+                                )
 
-        print(next)
+        #print(next)
 
 
     def parse_product(self, response):
         name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
-        price_ = response.xpath('//*[@itemprop="price"]/text()').extract_first()
         ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
         description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
-
         image_ = response.xpath('//*[@itemprop="image"]/@src')
         image_url_ = response.xpath('//*[@itemprop="image"]/@src').extract_first()
-
         update_on_ = date.today().isoformat()
-
-        yield GermandeliMultispidersItem(name=name_, price=price_, ingredients=ingredients_, description=description_,
+        price_ = response.xpath('//*[@itemprop="price"]/text()').extract()
+        if(1 <= len(price_)):
+            price_temp = str(price_[1])
+            if(1 <= len(ingredients_)):
+                ingredients_temp = ingredients_[1]
+                yield GermandeliMultispidersItem(name=name_, price=price_temp, ingredients=ingredients_temp, description=description_,
                                          update_on=update_on_, file_urls=[image_url_])
-
 
 
 
