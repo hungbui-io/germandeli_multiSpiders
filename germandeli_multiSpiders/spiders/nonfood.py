@@ -73,6 +73,7 @@ class NonfoodSpider(scrapy.Spider):
 
         print(next.extract_first)
 
+    def parse_page_1(self, response):
 
     def parse_product(self, response):
         name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
