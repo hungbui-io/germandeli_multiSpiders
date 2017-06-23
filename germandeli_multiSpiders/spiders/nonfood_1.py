@@ -7,7 +7,7 @@ from datetime import date
 
 
 class NonfoodSpider(scrapy.Spider):
-    name = "nonfood"
+    name = "nonfood1"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/NonFood/Black-Red-and-Gold',
                   'http://www.germandeli.com/NonFood/Cutlery_and_Accessories',
