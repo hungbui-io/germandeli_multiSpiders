@@ -20,18 +20,16 @@ class NonfoodSpider(scrapy.Spider):
             print(url)
 
     def parse_product(self, response):
-        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
+        name_ = str(response.xpath('//*[@itemprop="name"]/text()').extract_first())
         ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
         description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
         image_ = response.xpath('//*[@itemprop="image"]/@src')
         image_url_ = response.xpath('//*[@itemprop="image"]/@src').extract_first()
         update_on_ = date.today().isoformat()
-        price_ = response.xpath('//*[@itemprop="price"]/text()').extract()
-        if(1 <= len(price_)):
-             price_temp = str(price_[1])
-        else:
-            price_temp = str(price_[1])
+        price_ = str(response.xpath('//*[@itemprop="price"]/text()').extract()[0])
+        # else:
+        #     price_temp = str(price_[1])
         # if(1 <= len(ingredients_)):
         #    ingredients_temp = ingredients_[1]
-        yield GermandeliMultispidersItem(name= name_, price= price_temp, description=description_,
-                                         update_on=update_on_, file_urls=[image_url_])
+        yield GermandeliMultispidersItem(name= name_, price= price_, ingredients = ingredients_, description=description_,
+                                         update_on= update_on_, file_urls= [image_url_])
