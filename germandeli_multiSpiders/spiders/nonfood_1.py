@@ -7,9 +7,19 @@ from datetime import date
 
 
 class NonfoodSpider(scrapy.Spider):
-    name = "nonfood1"
+    name = "nonfood"
     allowed_domains = ["germandeli.com"]
-    start_urls = ['http://www.germandeli.com/NonFood/Black-Red-and-Gold']
+    start_urls = ['http://www.germandeli.com/NonFood/Black-Red-and-Gold',
+                  'http://www.germandeli.com/NonFood/Cutlery_and_Accessories',
+                  'http://www.germandeli.com/NonFood/Feuerzangenbowle',
+                  'http://www.germandeli.com/NonFood/German_Pottery__Porcelain',
+                  'http://www.germandeli.com/NonFood/PorcelainGlass',
+                  'http://www.germandeli.com/NonFood/Raclette_and_Fondue',
+                  'http://www.germandeli.com/NonFood/Raetsel_2',
+                  'http://www.germandeli.com/NonFood/Rumtopf_Rum_Pot_Pottery',
+                  'http://www.germandeli.com/NonFood/Spaetzle_Presses',
+                  'http://www.germandeli.com/NonFood/Indoor-Plant-Supplies',
+                  'http://www.germandeli.com/NonFood/PorcelainGlass']
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood1'}
 
     def parse(self, response):
