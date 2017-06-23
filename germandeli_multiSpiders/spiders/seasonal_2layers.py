@@ -9,29 +9,15 @@ from datetime import date
 class SeasonalSpider(scrapy.Spider):
     name = "seasonal"
     allowed_domains = ["germandeli.com"]
-    start_urls = ['http://www.germandeli.com/Seasonal',
-                  'http://www.germandeli.com/Seasonal/Christmas',
-                  'http://www.germandeli.com/Seasonal/Easter_Specialties',
-                  'http://www.germandeli.com/Seasonal/Greeting_Cards',
-                  'http://www.germandeli.com/Seasonal/Oktoberfest',
-                  'http://www.germandeli.com/Seasonal/Silvester_New_Years_Eve',
-                  'http://www.germandeli.com/Seasonal/Valentines_Day',]
+    start_urls = ['http://www.germandeli.com/Seasonal/Fasching',
+                  'http://www.germandeli.com/Seasonal/Halloween',
+                  'http://www.germandeli.com/Seasonal/Fathers_Day',
+                  'http://www.germandeli.com/Seasonal/Mothers_Day',
+                  ]
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/seasonal'}
 
-    def parse(self, response):
-        urls = response.xpath('*//div[@class="category-cell-name"]/a/@href').extract()
-        for url in urls:
-            if url is not None:
-                yield scrapy.Request("http://www.germandeli.com/"+str(url), self.parse_page)
-                print(url)
 
     def parse(self, response):
-        urls = response.xpath('*//div[@class="category-cell-name"]/a/@href')
-        for url in urls:
-            yield scrapy.Request("http://www.germandeli.com/"+str(url.extract()), self.parse_page)
-            print(url)
-
-    def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href')
         for url in urls:
             yield SplashRequest("http://www.germandeli.com" + str(url.extract()), self.parse_product,
@@ -68,7 +54,6 @@ class SeasonalSpider(scrapy.Spider):
 
         #print(next)
 
-    def parse_page_1(self, response):
 
     def parse_product(self, response):
         name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
