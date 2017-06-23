@@ -19,7 +19,10 @@ class NonfoodSpider(scrapy.Spider):
                   'http://www.germandeli.com/NonFood/Rumtopf_Rum_Pot_Pottery',
                   'http://www.germandeli.com/NonFood/Spaetzle_Presses',
                   'http://www.germandeli.com/NonFood/Indoor-Plant-Supplies',
-                  'http://www.germandeli.com/NonFood/PorcelainGlass']
+                  'http://www.germandeli.com/NonFood/PorcelainGlass',
+                  'http://www.germandeli.com/NonFood/Buecher_Romane_Raetsel_uzw/Kinder-Buecher',
+                  'http://www.germandeli.com/NonFood/Housewares/Barware/Swissmar_Barware',
+                  ]
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood1'}
 
     def parse(self, response):

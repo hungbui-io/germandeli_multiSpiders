@@ -14,6 +14,8 @@ class SeasonalSpider(scrapy.Spider):
                   'http://www.germandeli.com/NonFood/Napkins_and_Paper_Goods',
                   'http://www.germandeli.com/NonFood/Brooms_Brushes_Cloths',
                   'http://www.germandeli.com/NonFood/DetergentsCleaners',
+                  'http://www.germandeli.com/NonFood/Buecher_Romane_Raetsel_uzw/Cookbooks',
+                  'http://www.germandeli.com/NonFood/Buecher_Romane_Raetsel_uzw/Romane',
                   ]
     custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood'}
 
