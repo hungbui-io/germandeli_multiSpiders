@@ -23,7 +23,7 @@ class NonfoodSpider(scrapy.Spider):
                   'http://www.germandeli.com/NonFood/Buecher_Romane_Raetsel_uzw/Kinder-Buecher',
                   'http://www.germandeli.com/NonFood/Housewares/Barware/Swissmar_Barware',
                   ]
-    custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood1'}
+    custom_settings = {'FILES_STORE': '/home/hung/Projects/germandeli_multiSpiders/output/nonfood'}
 
     def parse(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href').extract()

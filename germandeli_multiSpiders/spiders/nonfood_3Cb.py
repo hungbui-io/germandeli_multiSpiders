@@ -7,7 +7,7 @@ from datetime import date
 
 
 class SeasonalSpider(scrapy.Spider):
-    name = "nonfood3"
+    name = "nonfood2"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/NonFood/Housewares',
                   'http://www.germandeli.com/NonFood/MagazinesZeitschriften',
