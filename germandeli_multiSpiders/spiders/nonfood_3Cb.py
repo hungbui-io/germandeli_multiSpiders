@@ -6,7 +6,7 @@ from scrapy_splash import SplashRequest
 from datetime import date
 
 
-class SeasonalSpider(scrapy.Spider):
+class NonfoodSpider2(scrapy.Spider):
     name = "nonfood2"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/NonFood/Housewares',
@@ -45,23 +45,6 @@ class SeasonalSpider(scrapy.Spider):
                                 )
             print(url)
 
-        # next = response.xpath('*//div[@class="pagination pagination-small pull-right"]/ul/li[3]/a/@href')
-        # yield SplashRequest("http://www.germandeli.com" + str(next.extract_first()), self.parse_page,
-        #                     args={
-        #                             # optional; parameters passed to Splash HTTP API
-        #                             'wait': 0.5,
-        #                             'timeout': 10,
-        #
-        #                             # 'url' is prefilled from request url
-        #                             # 'http_method' is set to 'POST' for POST requests
-        #                             # 'body' is set to request body for POST requests
-        #                         },
-        #                         endpoint='render.html',  # optional; default is render.html
-        #                         # splash_url='<url>',  # optional; overrides SPLASH_URL
-        #                         # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
-        #                         )
-        #
-        # print(next)
 
 
     def parse_product(self, response):

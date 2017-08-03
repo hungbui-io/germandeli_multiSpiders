@@ -6,7 +6,7 @@ from scrapy_splash import SplashRequest
 from datetime import date
 
 
-class SeasonalSpider(scrapy.Spider):
+class SeasonalSpider2(scrapy.Spider):
     name = "seasonal2"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/Seasonal/Christmas',
@@ -23,12 +23,6 @@ class SeasonalSpider(scrapy.Spider):
             if url is not None:
                 yield scrapy.Request("http://www.germandeli.com/"+str(url), self.parse_page)
                 print(url)
-
-    def parse(self, response):
-        urls = response.xpath('*//div[@class="category-cell-name"]/a/@href')
-        for url in urls:
-            yield scrapy.Request("http://www.germandeli.com/"+str(url.extract()), self.parse_page)
-            print(url)
 
     def parse_page(self, response):
         urls = response.xpath('*//h2[@class="item-cell-name"]/a/@href')
