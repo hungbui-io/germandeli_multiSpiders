@@ -6,7 +6,7 @@ from scrapy_splash import SplashRequest
 from datetime import date
 
 
-class NonfoodSpider(scrapy.Spider):
+class NonfoodSpider1(scrapy.Spider):
     name = "nonfood1"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/NonFood/Black-Red-and-Gold',

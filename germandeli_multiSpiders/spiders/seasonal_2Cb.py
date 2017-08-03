@@ -6,7 +6,7 @@ from scrapy_splash import SplashRequest
 from datetime import date
 
 
-class SeasonalSpider(scrapy.Spider):
+class SeasonalSpider1(scrapy.Spider):
     name = "seasonal1"
     allowed_domains = ["germandeli.com"]
     start_urls = ['http://www.germandeli.com/Seasonal/Fasching',
