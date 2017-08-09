@@ -52,21 +52,25 @@ class DrugstoreSpider(scrapy.Spider):
                                 # splash_url='<url>',  # optional; overrides SPLASH_URL
                                 # slot_policy=scrapy_splash.SlotPolicy.PER_DOMAIN,  # optional
                                 )
-
-        #print(next)
-
-
+        
     def parse_product(self, response):
-        name_ = response.xpath('//*[@itemprop="name"]/text()').extract_first()
+        name_ = str(response.xpath('//*[@itemprop="name"]/text()').extract_first())
+        name_ = name_.replace("\t", "")
+        name_ = name_.replace("\n", "")
         ingredients_ = response.xpath('//*[@id="ingredients"]/text()').extract()
         description_ = response.xpath('*//div[@class="tab-pane active in"]/ul/li/text()').extract()
-        image_ = response.xpath('//*[@itemprop="image"]/@src')
+        #image_ = response.xpath('//*[@itemprop="image"]/@src')
         image_url_ = response.xpath('//*[@itemprop="image"]/@src').extract_first()
         update_on_ = date.today().isoformat()
         price_ = response.xpath('//*[@itemprop="price"]/text()').extract()
         if(1 <= len(price_)):
             price_temp = str(price_[1])
+            price_temp = price_temp.replace("\t", "")
+            price_temp = price_temp.replace("\n", "")
             if(1 <= len(ingredients_)):
-                ingredients_temp = ingredients_[1]
-                yield GermandeliMultispidersItem(name=name_, price=price_temp, ingredients=ingredients_temp, description=description_,
-                                         update_on=update_on_, file_urls=[image_url_])
+                ingredients_temp = str(ingredients_[1])
+                ingredients_temp = ingredients_temp.replace("\t", "")
+                ingredients_temp = ingredients_temp.replace("\n", "")
+                ingredients_temp = ingredients_temp.replace("  ", "")
+                yield GermandeliItem(name=name_, price=price_temp, ingredients=ingredients_temp, description=description_,
+                                     update_on=update_on_, file_urls=[image_url_])
