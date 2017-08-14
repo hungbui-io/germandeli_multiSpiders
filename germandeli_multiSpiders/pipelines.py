@@ -14,7 +14,7 @@ from scrapy.exporters import JsonItemExporter, CsvItemExporter, XmlItemExporter
 import json
 import codecs
 
-class GermandeliMultispiders(object):
+class GermandeliMultispidersPipeline(object):
     def process_item(self, item, spider):
         return item
 
